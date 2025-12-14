@@ -19,9 +19,9 @@
 </script>
 <!-- End Matomo Code -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>NAND Gate Simulator - CS:Box</title>
-    <link rel="canonical" href="https://www.computingbox.co.uk/nand-gate.html">
-    <meta property="og:url" content="https://www.computingbox.co.uk/nand-gate.html">
+    <title>Binary Simulator - CS:Box</title>
+    <link rel="canonical" href="https://www.computingbox.co.uk/binary.html">
+    <meta property="og:url" content="https://www.computingbox.co.uk/binary.html">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta property="og:image" content="https://www.computingbox.co.uk/assets/img/ComputingBox-Logo.webp">
@@ -132,15 +132,15 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="about">About</a></li>
-                        <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="false" href="#">Binary</a>
-                            <div class="dropdown-menu"><a class="dropdown-item" href="unsigned-binary">Unsigned Integers</a><a class="dropdown-item" href="twos-compliment-binary">Two's Compliment</a></div>
+                        <li class="nav-item dropdown"><a class="dropdown-toggle nav-link active" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="false" href="#">Binary</a>
+                            <div class="dropdown-menu"><a class="dropdown-item active" href="unsigned-binary">Unsigned Integers</a><a class="dropdown-item" href="twos-compliment-binary">Two's Compliment</a></div>
                         </li>
                         <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="false" href="#">Hexadecimal</a>
                             <div class="dropdown-menu"><a class="dropdown-item" href="gcse-hexadecimal">GCSE</a><a class="dropdown-item" href="a-level-hexadecimal">A Level</a></div>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="hex-colours">Hex Colours</a></li>
-                        <li class="nav-item dropdown"><a class="dropdown-toggle nav-link active" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="false" href="#">Logic Gates</a>
-                            <div class="dropdown-menu"><a class="dropdown-item" href="not-gate">NOT</a><a class="dropdown-item" href="and-gate">AND</a><a class="dropdown-item" href="or-gate">OR</a><a class="dropdown-item" href="nor-gate">NOR</a><a class="dropdown-item active" href="nand-gate">NAND</a><a class="dropdown-item" href="xor-gate">XOR</a><a class="dropdown-item" href="xnor-gate">XNOR</a></div>
+                        <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" data-bs-auto-close="false" href="#">Logic Gates</a>
+                            <div class="dropdown-menu"><a class="dropdown-item" href="not-gate">NOT</a><a class="dropdown-item" href="and-gate">AND</a><a class="dropdown-item" href="or-gate">OR</a><a class="dropdown-item" href="nor-gate">NOR</a><a class="dropdown-item" href="nand-gate">NAND</a><a class="dropdown-item" href="xor-gate">XOR</a><a class="dropdown-item" href="xnor-gate">XNOR</a></div>
                         </li>
                     </ul>
                 </div>
@@ -165,25 +165,139 @@
         <!-- Start: 1 Row 2 Columns -->
         <div class="container" style="width: 100%;margin-top: 15px;">
             <div class="row">
-                <div class="col" style="height: 120px;"></div>
+                <div class="col centred" style="width: 35%;">
+                    <div class="centred reset" style="position: relative;">
+                        <p class="resetButton">Reset bit:box</p>
+                        <div style="position: absolute;"><img class="overlay resetIcon" src="assets/img/BitBoxLogo.png?h=a50b3ddb5614299b0c00dd4f01bc402e" onclick="resetBinarySimulator()"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12 bottomSpacer"></div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="width: 60%;">
+                    <div class="row">
+                        <div class="col">
+                            <h1 class="simHeading">Denary</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h1 id="denaryNumber" class="simData">0</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="width: 20%;">
+                    <div class="row">
+                        <div class="col hexadecimalButtons"><button class="btn btn-primary binaryButtons customiserButtons" type="button" onclick="requestBinary()">Custom Binary</button></div>
+                    </div>
+                    <div class="row">
+                        <div class="col hexadecimalButtons"><button class="btn btn-primary binaryButtons customiserButtons" type="button" onclick="requestDenary()">Custom Denary</button></div>
+                    </div>
+                </div>
             </div>
             <div class="row">
-                <div class="col">
-                    <h1 id="pageHeading" class="simHeading">NAND Gate</h1>
+                <div class="col centred" style="width: 35%;">
+                    <div class="row">
+                        <div class="col-xl-12 bottomSpacer"></div>
+                    </div>
                 </div>
+                <div class="col-md-6" style="width: 60%;">
+                    <div class="row">
+                        <div class="col">
+                            <h1 class="simHeading">Binary</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h1 id="binaryNumber" class="simData">00000000</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="width: 20%;">
+                    <div class="row">
+                        <div class="col hexadecimalButtons"><button class="btn btn-primary binaryButtons customiserButtons" type="button" onclick="shiftBinary(&quot;left&quot;)">Left Shift</button></div>
+                    </div>
+                    <div class="row">
+                        <div class="col hexadecimalButtons"><button class="btn btn-primary binaryButtons customiserButtons" type="button" onclick="shiftBinary(&quot;right&quot;)">Right Shift</button></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col spacer" style="width: 100%;"></div>
             </div>
         </div><!-- End: 1 Row 2 Columns -->
-        <!-- Start: 1 Row 3 Columns -->
-        <div class="container">
-            <div class="row">
-                <div class="col-auto logicGates centred" style="height: 194px;"><button class="btn btn-primary buttonMiddle logicGateInput1" id="swtInput1" type="button" onclick="toggleInput(1)" style="display: grid;position: relative;transform: translate(58px);">⏼</button><button class="btn btn-primary buttonMiddle logicGateInput2" id="swtInput2" type="button" onclick="toggleInput(2)" style="position: relative;display: grid;">⏼</button><img class="logicGate" src="https://upload.wikimedia.org/wikipedia/commons/f/f2/NAND_ANSI.svg" width="460" height="240">
-                    <h1 id="blbNandGate" class="poweredOn dualInputSingleOutput">💡<br></h1>
-                </div>
+        <div class="container d-xl-flex justify-content-xl-center centred">
+            <div class="text-center d-xl-flex justify-content-xl-center" style="width: 100%;">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th class="tableCells">
+                                <h1 id="blb128" class="poweredOff" style="text-align: center;font-size: 48px;">💡<br></h1>
+                            </th>
+                            <th class="tableCells">
+                                <h1 id="blb64" class="poweredOff" style="text-align: center;font-size: 48px;">💡<br></h1>
+                            </th>
+                            <th class="tableCells">
+                                <h1 id="blb32" class="poweredOff" style="text-align: center;font-size: 48px;">💡<br></h1>
+                            </th>
+                            <th class="tableCells">
+                                <h1 id="blb16" class="poweredOff" style="text-align: center;font-size: 48px;">💡<br></h1>
+                            </th>
+                            <th class="tableCells">
+                                <h1 id="blb8" class="poweredOff" style="text-align: center;font-size: 48px;">💡<br></h1>
+                            </th>
+                            <th class="tableCells">
+                                <h1 id="blb4" class="poweredOff" style="text-align: center;font-size: 48px;">💡<br></h1>
+                            </th>
+                            <th class="tableCells">
+                                <h1 id="blb2" class="poweredOff" style="text-align: center;font-size: 48px;">💡<br></h1>
+                            </th>
+                            <th class="tableCells">
+                                <h1 id="blb1" class="poweredOff" style="text-align: center;font-size: 48px;">💡</h1>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="tableCells">
+                                <h1 id="lbl-msb" class="simColumns">128</h1>
+                            </td>
+                            <td class="tableCells">
+                                <h1 class="simColumns">64</h1>
+                            </td>
+                            <td class="tableCells">
+                                <h1 class="simColumns">32</h1>
+                            </td>
+                            <td class="tableCells">
+                                <h1 class="simColumns">16</h1>
+                            </td>
+                            <td class="tableCells">
+                                <h1 class="simColumns">8</h1>
+                            </td>
+                            <td class="tableCells">
+                                <h1 class="simColumns">4</h1>
+                            </td>
+                            <td class="tableCells">
+                                <h1 class="simColumns">2</h1>
+                            </td>
+                            <td class="tableCells">
+                                <h1 id="lbl-lsb" class="simColumns">1</h1>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center tableCells"><button class="btn btn-primary buttonMiddle" id="swt128" type="button" onclick="changeBit(128)">⏼<br></button></td>
+                            <td class="text-center tableCells"><button class="btn btn-primary buttonMiddle" id="swt64" type="button" onclick="changeBit(64)">⏼<br></button></td>
+                            <td class="text-center tableCells"><button class="btn btn-primary buttonMiddle" id="swt32" type="button" onclick="changeBit(32)">⏼<br></button></td>
+                            <td class="text-center tableCells"><button class="btn btn-primary buttonMiddle" id="swt16" type="button" onclick="changeBit(16)">⏼<br></button></td>
+                            <td class="text-center tableCells"><button class="btn btn-primary buttonMiddle" id="swt8" type="button" onclick="changeBit(8)">⏼<br></button></td>
+                            <td class="text-center tableCells"><button class="btn btn-primary buttonMiddle" id="swt4" type="button" onclick="changeBit(4)">⏼<br></button></td>
+                            <td class="text-center tableCells"><button class="btn btn-primary buttonMiddle" id="swt2" type="button" onclick="changeBit(2)">⏼<br></button></td>
+                            <td class="text-center"><button class="btn btn-primary buttonMiddle" id="swt1" type="button" onclick="changeBit(1)">⏼<br></button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="row">
-                <div class="col-auto logicGates centred" style="height: 194px;"><button class="btn btn-primary warning btnReset" id="gateReset-1" type="button" style="margin-top: 3em;" onclick="resetGate()">Reset</button></div>
-            </div>
-        </div><!-- End: 1 Row 3 Columns -->
+        </div>
         <div class="container d-xl-flex justify-content-xl-center centred" style="height: 120px;"></div>
     </section><!-- Start: Footer Multi Column -->
     <footer style="background: rgb(45,44,56);">
