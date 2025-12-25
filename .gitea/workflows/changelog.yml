@@ -1,0 +1,59 @@
+name: Changelog
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history + tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate CHANGELOG.md (Keep a Changelog)
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --verbose
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: Commit and push if changed (PAT)
+        shell: bash
+        env:
+          CHANGELOG_PAT: ${{ secrets.CHANGELOG_PAT }}
+        run: |
+          set -e
+
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "No changelog changes."
+            exit 0
+          fi
+
+          git config user.name "changelog-bot"
+          git config user.email "changelog-bot@users.noreply.local"
+
+          git add CHANGELOG.md
+          git commit -m "docs(changelog): update changelog [skip ci]"
+
+          # Push using PAT (avoid relying on built-in tokens)
+          # NOTE: This assumes your origin remote is already set by checkout.
+          origin_url="$(git remote get-url origin)"
+
+          # Convert SSH origin to HTTPS if needed
+          if echo "$origin_url" | grep -q "^git@"; then
+            host="$(echo "$origin_url" | sed -E 's#git@([^:]+):.*#\1#')"
+            path="$(echo "$origin_url" | sed -E 's#git@[^:]+:(.*)#\1#')"
+            origin_url="https://$host/$path"
+          fi
+
+          # Inject token (PAT) into HTTPS URL
+          authed_url="$(echo "$origin_url" | sed -E "s#^https://#https://oauth2:${CHANGELOG_PAT}@#")"
+
+          git push "$authed_url" HEAD:main
