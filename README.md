@@ -1,4 +1,4 @@
-# This project has evolved to become Computing:Box Available at [www.computingbox.co.uk](https://www.computingbox.co.uk) and [www.computingbox.co.uk](https://www.computingbox.co.uk)
+# This project has evolved to become Computing:Box Available at [git.adcmnetworks.co.uk/alexander.lyall/computing-box](https://git.adcmnetworks.co.uk/alexander.lyall/computing-box), [github.com/MrLyallCSIT/Computing-Box] (https://github.com/MrLyallCSIT/Computing-Box) and [www.computingbox.co.uk](https://www.computingbox.co.uk)
 
 # CS:Box
 An evolution of Bit:Box to incorporate different elements of the UK Computing Curriculum
