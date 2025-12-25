@@ -1,5 +1,5 @@
 # This project has evolved to become [Computing:Box](https://git.adcmnetworks.co.uk/alexander.lyall/computing-box)
-Available at
+### Available at:
 - [Personal Gitea Instance](https://git.adcmnetworks.co.uk/alexander.lyall/computing-box),
 - [GitHub](https://github.com/MrLyallCSIT/Computing-Box)
 - [The Official Computing:Box Website](https://www.computingbox.co.uk)
@@ -7,7 +7,8 @@ Available at
 # CS:Box
 An evolution of Bit:Box to incorporate different elements of the UK Computing Curriculum
 
-![CS:Box Logo](/assets/img/CSBox-Logo.png "CS:Box Logo")
+
+<img src="/assets/img/CSBox-Logo.png" alt="CS:Box Logo" width="250px" height="250px"/>
 
 ## Upcoming Features
 ### Original Bit:Box Features (October 2024)
@@ -27,9 +28,13 @@ An evolution of Bit:Box to incorporate different elements of the UK Computing Cu
 - [X] XOR Gate Simulator
 - [X] XNOR Gate Simulator
 
-### Wave 3 CS:Box Features (TBC)
+### Wave 3 CS:Box Features (Spring 2026)
+- [X] Two's Compliment Simulator
+- [ ] Extended Binary Simulator (Custom bit sizes)
+- [ ] Unified Binary Simulator (Unsigned & Two's Completment combined)
+- [ ] Enhanced Gate Simulator (Truth Table Creator)
 - [ ] Compound Gate Simulator
-- [ ] Two's Compliment Simulator
+- [ ] Computer Components Simulator
 
 ## Version 1.0 Release Date: 1<sup>st</sup> September 2025
 ## Version 2.0 Release Date (Goal): 1<sup>st</sup> April 2026
