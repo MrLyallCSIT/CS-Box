@@ -33,24 +33,32 @@ jobs:
           git-cliff --config cliff.toml --output RELEASE_NOTES.md
           test -s RELEASE_NOTES.md
 
-      - name: Prepare tag and validate zip
+      - name: Create export zip (Computing:Box Website.zip)
         shell: bash
         run: |
           set -e
-
-          ZIP_PATH="Computing:Box Website.zip"
-          if [ ! -f "$ZIP_PATH" ]; then
-            echo "❌ Expected zip not found: $ZIP_PATH"
+          if [ ! -d "export" ]; then
+            echo "❌ export/ folder not found in repo root"
             ls -la
             exit 1
           fi
 
+          # Create the zip with the exact requested display name
+          rm -f "Computing:Box Website.zip"
+          (cd export && zip -r "../Computing:Box Website.zip" .)
+          test -s "Computing:Box Website.zip"
+          ls -lh "Computing:Box Website.zip"
+
+      - name: Prepare tag
+        shell: bash
+        run: |
+          set -e
           SHORT_SHA="$(git rev-parse --short HEAD)"
           RUN_NO="${GITHUB_RUN_NUMBER:-0}"
-          TAG="v1.9-${RUN_NO}-${SHORT_SHA}"
+          TAG="main-${RUN_NO}-${SHORT_SHA}"
 
           echo "TAG=$TAG" >> "$GITHUB_ENV"
-          echo "ZIP_PATH=$ZIP_PATH" >> "$GITHUB_ENV"
+          echo "ZIP_PATH=Computing:Box Website.zip" >> "$GITHUB_ENV"
 
       - name: Create and push tag (Gitea PAT)
         shell: bash
@@ -96,13 +104,10 @@ jobs:
 
           api="$base/api/v1"
 
-          # Build release JSON payload to a file (safe, avoids YAML quoting issues)
+          # Build release JSON payload to a file
           python3 - <<'PY'
-          import json
-          import os
-
+          import json, os
           tag = os.environ["TAG"]
-
           with open("RELEASE_NOTES.md", "r", encoding="utf-8") as f:
               body = f.read()
 
@@ -140,7 +145,7 @@ jobs:
           )"
           echo "Created release id: $release_id"
 
-          # Upload asset (keep display name exactly "Computing:Box Website.zip")
+          # Upload asset (display name exactly "Computing:Box Website.zip")
           curl -sS -X POST \
             -H "Authorization: token ${RELEASE_PAT}" \
             "${api}/repos/${owner}/${repo}/releases/${release_id}/assets?name=Computing%3ABox%20Website.zip" \
