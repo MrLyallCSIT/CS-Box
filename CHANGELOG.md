@@ -16,6 +16,8 @@ and this project adheres to [Conventional Commits](https://www.conventionalcommi
 
 - update changelog [skip ci]
 
+- update changelog [skip ci]
+
 
 ## [v1.9] - 2025-12-26
 
