@@ -63,7 +63,7 @@ jobs:
       - name: Create and push tag (Gitea PAT)
         shell: bash
         env:
-          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          RELEASE_PAT: ${{ secrets.CHANGELOG_PAT}}
         run: |
           set -e
 
@@ -84,7 +84,7 @@ jobs:
       - name: Create release + upload asset
         shell: bash
         env:
-          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          RELEASE_PAT: ${{ secrets.CHANGELOG_PAT}}
         run: |
           set -e
 
