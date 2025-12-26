@@ -7,6 +7,10 @@
 <script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(["setCookieDomain", "*.www.computingbox.co.uk"]);
+  _paq.push(["setDomains", ["*.www.computingbox.co.uk","*.csbox.mrdaviscsit.uk","*.csbox.mrlyall.co.uk","*.csbox.mrlyall.uk"]]);
+  _paq.push(["enableCrossDomainLinking"]);
+  _paq.push(["disableCookies"]);
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
@@ -17,6 +21,7 @@
     g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+<noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//analytics.adcmnetworks.co.uk/matomo.php?idsite=2&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 <!-- End Matomo Code -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Projects - CS:Box</title>
@@ -26,12 +31,12 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta property="og:image" content="https://www.computingbox.co.uk/assets/img/ComputingBox-Logo.webp">
     <script>!function(){const e=()=>localStorage.getItem("theme"),t=document.documentElement.getAttribute("data-bss-forced-theme"),a=()=>{if(t)return t;const a=e();if(a)return a;const r=document.documentElement.getAttribute("data-bs-theme");return r||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")},r=e=>{"auto"===e&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.setAttribute("data-bs-theme","dark"):document.documentElement.setAttribute("data-bs-theme",e)};r(a());const c=(e,t=!1)=>{const a=[].slice.call(document.querySelectorAll(".theme-switcher"));if(a.length){document.querySelectorAll("[data-bs-theme-value]").forEach((e=>{e.classList.remove("active"),e.setAttribute("aria-pressed","false")}));for(const t of a){const a=t.querySelector('[data-bs-theme-value="'+e+'"]');a&&(a.classList.add("active"),a.setAttribute("aria-pressed","true"))}}};window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",(()=>{const t=e();"light"!==t&&"dark"!==t&&r(a())})),window.addEventListener("DOMContentLoaded",(()=>{c(a()),document.querySelectorAll("[data-bs-theme-value]").forEach((e=>{e.addEventListener("click",(t=>{t.preventDefault();const a=e.getAttribute("data-bs-theme-value");(e=>{localStorage.setItem("theme",e)})(a),r(a),c(a)}))}))}))}();</script>
-    <link rel="icon" type="image/svg+xml" sizes="500x500" href="assets/img/CSBoxLogo.svg?h=ca838acaf7f1bc97e10657f07ed63d71">
-    <link rel="icon" type="image/svg+xml" sizes="500x500" href="assets/img/CSBoxLogo.svg?h=ca838acaf7f1bc97e10657f07ed63d71" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/svg+xml" sizes="500x500" href="assets/img/CSBoxLogo.svg?h=ca838acaf7f1bc97e10657f07ed63d71">
-    <link rel="icon" type="image/svg+xml" sizes="500x500" href="assets/img/CSBoxLogo.svg?h=ca838acaf7f1bc97e10657f07ed63d71" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/svg+xml" sizes="500x500" href="assets/img/CSBoxLogo.svg?h=ca838acaf7f1bc97e10657f07ed63d71">
-    <link rel="icon" type="image/svg+xml" sizes="500x500" href="assets/img/CSBoxLogo.svg?h=ca838acaf7f1bc97e10657f07ed63d71">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=bec7173809e9299f24e368ea574911e3">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
@@ -112,16 +117,16 @@
             <div class="row justify-content-center">
                 <!-- Start: About Project -->
                 <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column">
-                    <div class="fw-bold d-flex align-items-center mb-2"><img src="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" style="width: 32px;margin: 5px;"><span>Computing:Box</span></div>
+                    <div class="fw-bold d-flex align-items-center mb-2"><img src="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" style="width: 32px;margin: 5px;" width="32" height="32"><span>Computing:Box</span></div>
                     <p class="text-muted">Computing Concept Simulators</p>
                 </div><!-- End: About Project -->
-                <!-- Start: About -->
-                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column"></div><!-- End: About -->
             </div>
             <hr>
             <div class="col text-center d-block"><a href="https://www.computingbox.co.uk">Computing:Box</a> © 2024 by <a href="https://git.adcmnetworks.co.uk/alexander.lyall">Alexander Lyall</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a><br><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><br><a href="copyright">Copyright Notice</a></div>
             <div class="text-muted d-flex justify-content-center"></div>
-            <p class="mb-0">&nbsp;Powered By ADCM Networks</p>
+            <p class="mb-0"><noscript><!-- Matomo Image Tracker-->
+<img referrerpolicy="no-referrer-when-downgrade" src="https://analytics.adcmnetworks.co.uk/matomo.php?idsite=2&amp;rec=1" style="border:0" alt="" />
+    <!-- End Matomo --></noscript>Built for UK Computing Curriculum<br>Powered By ADCM Networks</p>
         </div>
     </footer><!-- End: Footer Multi Column -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
