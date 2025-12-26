@@ -8,13 +8,14 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout (full history + tags)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install git-cliff (no GitHub API)
+      - name: Install git-cliff
         shell: bash
         run: |
           set -e
@@ -25,71 +26,60 @@ jobs:
           sudo install /tmp/git-cliff-*/git-cliff /usr/local/bin/git-cliff
           git-cliff --version
 
-      - name: Generate release notes (Keep a Changelog)
+      - name: Generate release notes
         shell: bash
         run: |
           set -e
-          # This generates a full changelog doc; we’ll use it as the release body.
           git-cliff --config cliff.toml --output RELEASE_NOTES.md
-
-          # (Optional) Trim header if you only want entries (keep as-is if you prefer full text)
-          # For now we use the full generated content.
           test -s RELEASE_NOTES.md
 
-      - name: Prepare tag + locate zip
+      - name: Prepare tag and validate zip
         shell: bash
         run: |
           set -e
 
-          # Your exported zip file in the repository
           ZIP_PATH="Computing:Box Website.zip"
           if [ ! -f "$ZIP_PATH" ]; then
             echo "❌ Expected zip not found: $ZIP_PATH"
-            echo "Files in repo root:"
             ls -la
             exit 1
           fi
 
-          # Create a unique tag for every commit to main
           SHORT_SHA="$(git rev-parse --short HEAD)"
           RUN_NO="${GITHUB_RUN_NUMBER:-0}"
           TAG="v1.9-${RUN_NO}-${SHORT_SHA}"
 
-          echo "TAG=$TAG" >> $GITHUB_ENV
-          echo "ZIP_PATH=$ZIP_PATH" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          echo "ZIP_PATH=$ZIP_PATH" >> "$GITHUB_ENV"
 
-      - name: Create and push tag (uses CHANGELOG_PAT)
+      - name: Create and push tag (Gitea PAT)
         shell: bash
         env:
-          CHANGELOG_PAT: ${{ secrets.CHANGELOG_PAT }}
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
         run: |
           set -e
 
-          # Tag the current commit
           git tag -f "$TAG"
 
           origin_url="$(git remote get-url origin)"
 
-          # Convert SSH origin to HTTPS if needed (git@host:owner/repo -> https://host/owner/repo)
+          # Convert SSH origin to HTTPS if needed
           if echo "$origin_url" | grep -q "^git@"; then
             host="$(echo "$origin_url" | sed -E 's#git@([^:]+):.*#\1#')"
             path="$(echo "$origin_url" | sed -E 's#git@[^:]+:(.*)#\1#')"
             origin_url="https://$host/$path"
           fi
 
-          authed_url="$(echo "$origin_url" | sed -E "s#^https://#https://oauth2:${CHANGELOG_PAT}@#")"
-
-          # Push the tag
+          authed_url="$(echo "$origin_url" | sed -E "s#^https://#https://oauth2:${RELEASE_PAT}@#")"
           git push "$authed_url" "refs/tags/$TAG" --force
 
-      - name: Create release + upload asset to Gitea
+      - name: Create release + upload asset
         shell: bash
         env:
-          CHANGELOG_PAT: ${{ secrets.CHANGELOG_PAT }}
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
         run: |
           set -e
 
-          # Derive base URL + owner/repo from origin
           origin_url="$(git remote get-url origin)"
           if echo "$origin_url" | grep -q "^git@"; then
             host="$(echo "$origin_url" | sed -E 's#git@([^:]+):.*#\1#')"
@@ -99,7 +89,6 @@ jobs:
 
           base="$(echo "$origin_url" | sed -E 's#(https?://[^/]+)/.*#\1#')"
           repo_path="$(echo "$origin_url" | sed -E 's#https?://[^/]+/##')"
-          # Remove trailing .git if present
           repo_path="$(echo "$repo_path" | sed -E 's/\.git$//')"
 
           owner="$(echo "$repo_path" | cut -d/ -f1)"
@@ -107,58 +96,55 @@ jobs:
 
           api="$base/api/v1"
 
-          # Build release body (escape as JSON safely)
-          body_json="$(python3 - << 'PY'
+          # Build release JSON payload to a file (safe, avoids YAML quoting issues)
+          python3 - <<'PY'
 import json
-with open("RELEASE_NOTES.md","r",encoding="utf-8") as f:
-    txt = f.read()
-print(json.dumps(txt))
-PY
-)"
+import os
 
-          # Create release
-          payload="$(python3 - << PY
-import json
-print(json.dumps({
-  "tag_name": "${TAG}",
-  "target_commitish": "main",
-  "name": "${TAG}",
-  "body": json.loads(${body_json}),
-  "draft": False,
-  "prerelease": False
-}))
-PY
-)"
+tag = os.environ["TAG"]
 
-          release_resp="$(curl -sS -X POST \
-            -H "Authorization: token ${CHANGELOG_PAT}" \
+with open("RELEASE_NOTES.md", "r", encoding="utf-8") as f:
+    body = f.read()
+
+payload = {
+    "tag_name": tag,
+    "target_commitish": "main",
+    "name": tag,
+    "body": body,
+    "draft": False,
+    "prerelease": False,
+}
+
+with open("release.json", "w", encoding="utf-8") as f:
+    json.dump(payload, f)
+PY
+
+          # Create the release
+          curl -sS -X POST \
+            -H "Authorization: token ${RELEASE_PAT}" \
             -H "Content-Type: application/json" \
             "${api}/repos/${owner}/${repo}/releases" \
-            -d "${payload}")"
+            --data-binary @release.json \
+            -o release_response.json
 
-          release_id="$(python3 - << 'PY'
-import json,sys
-data=json.loads(sys.stdin.read())
+          # Extract release id
+          release_id="$(python3 - <<'PY'
+import json
+with open("release_response.json","r",encoding="utf-8") as f:
+    data=json.load(f)
 rid=data.get("id")
 if not rid:
-    print("NO_ID")
-    print(json.dumps(data, indent=2))
-    sys.exit(1)
+    raise SystemExit("No release id returned. Response:\n" + json.dumps(data, indent=2))
 print(rid)
 PY
-<<EOF
-$release_resp
-EOF
 )"
-
           echo "Created release id: $release_id"
 
-          # Upload asset (multipart/form-data)
-          # Use a filename that matches what you want users to see in the release.
+          # Upload asset (keep display name exactly "Computing:Box Website.zip")
           curl -sS -X POST \
-            -H "Authorization: token ${CHANGELOG_PAT}" \
+            -H "Authorization: token ${RELEASE_PAT}" \
             "${api}/repos/${owner}/${repo}/releases/${release_id}/assets?name=Computing%3ABox%20Website.zip" \
             -F "attachment=@${ZIP_PATH}" \
             >/dev/null
 
-          echo "✅ Release created and asset uploaded: ${TAG}"
+          echo "✅ Release created: ${TAG} (asset uploaded)"
