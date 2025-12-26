@@ -98,26 +98,26 @@ jobs:
 
           # Build release JSON payload to a file (safe, avoids YAML quoting issues)
           python3 - <<'PY'
-import json
-import os
+          import json
+          import os
 
-tag = os.environ["TAG"]
+          tag = os.environ["TAG"]
 
-with open("RELEASE_NOTES.md", "r", encoding="utf-8") as f:
-    body = f.read()
+          with open("RELEASE_NOTES.md", "r", encoding="utf-8") as f:
+              body = f.read()
 
-payload = {
-    "tag_name": tag,
-    "target_commitish": "main",
-    "name": tag,
-    "body": body,
-    "draft": False,
-    "prerelease": False,
-}
+          payload = {
+              "tag_name": tag,
+              "target_commitish": "main",
+              "name": tag,
+              "body": body,
+              "draft": False,
+              "prerelease": False,
+          }
 
-with open("release.json", "w", encoding="utf-8") as f:
-    json.dump(payload, f)
-PY
+          with open("release.json", "w", encoding="utf-8") as f:
+              json.dump(payload, f)
+          PY
 
           # Create the release
           curl -sS -X POST \
@@ -129,15 +129,15 @@ PY
 
           # Extract release id
           release_id="$(python3 - <<'PY'
-import json
-with open("release_response.json","r",encoding="utf-8") as f:
-    data=json.load(f)
-rid=data.get("id")
-if not rid:
-    raise SystemExit("No release id returned. Response:\n" + json.dumps(data, indent=2))
-print(rid)
-PY
-)"
+          import json
+          with open("release_response.json","r",encoding="utf-8") as f:
+              data=json.load(f)
+          rid=data.get("id")
+          if not rid:
+              raise SystemExit("No release id returned. Response:\n" + json.dumps(data, indent=2))
+          print(rid)
+          PY
+          )"
           echo "Created release id: $release_id"
 
           # Upload asset (keep display name exactly "Computing:Box Website.zip")
