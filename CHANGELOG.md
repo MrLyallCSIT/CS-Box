@@ -9,6 +9,12 @@ and this project adheres to [Conventional Commits](https://www.conventionalcommi
 
 
 
+### Documentation
+
+
+- update changelog [skip ci]
+
+
 ## [v1.9] - 2025-12-26
 
 
