@@ -44,6 +44,8 @@ and this project adheres to [Conventional Commits](https://www.conventionalcommi
 
 - apply Creative Commons licence to V1 exported site
 
+- v1.9
+
 
 ### Reverted
 
