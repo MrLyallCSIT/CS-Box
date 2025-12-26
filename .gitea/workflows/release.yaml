@@ -58,10 +58,10 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo "ZIP_PATH=$ZIP_PATH" >> $GITHUB_ENV
 
-      - name: Create and push tag (uses RELEASE_PAT)
+      - name: Create and push tag (uses CHANGELOG_PAT)
         shell: bash
         env:
-          RELEASE_PAT: ${{ secrets.CHANGELOG_PAT }}
+          CHANGELOG_PAT: ${{ secrets.CHANGELOG_PAT }}
         run: |
           set -e
 
@@ -77,7 +77,7 @@ jobs:
             origin_url="https://$host/$path"
           fi
 
-          authed_url="$(echo "$origin_url" | sed -E "s#^https://#https://oauth2:${RELEASE_PAT}@#")"
+          authed_url="$(echo "$origin_url" | sed -E "s#^https://#https://oauth2:${CHANGELOG_PAT}@#")"
 
           # Push the tag
           git push "$authed_url" "refs/tags/$TAG" --force
@@ -85,7 +85,7 @@ jobs:
       - name: Create release + upload asset to Gitea
         shell: bash
         env:
-          RELEASE_PAT: ${{ secrets.CHANGELOG_PAT }}
+          CHANGELOG_PAT: ${{ secrets.CHANGELOG_PAT }}
         run: |
           set -e
 
