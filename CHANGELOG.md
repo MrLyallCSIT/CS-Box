@@ -9,6 +9,10 @@ and this project adheres to [Conventional Commits](https://www.conventionalcommi
 
 
 
+## [v1.9] - 2025-12-26
+
+
+
 ### Added
 
 
@@ -45,6 +49,8 @@ and this project adheres to [Conventional Commits](https://www.conventionalcommi
 - apply Creative Commons licence to V1 exported site
 
 - v1.9
+
+- update changelog [skip ci]
 
 
 ### Reverted
