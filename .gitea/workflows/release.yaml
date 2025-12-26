@@ -1,4 +1,4 @@
-name: Release on main
+name: Changelog + Release on main
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  changelog_and_release:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,6 +14,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Stop if this is the bot changelog commit
+        shell: bash
+        run: |
+          set -e
+          msg="$(git log -1 --pretty=%B)"
+          echo "$msg" | tr -d '\r' | grep -qi "\[skip ci\]" && {
+            echo "Skipping (bot commit with [skip ci])"
+            exit 0
+          } || true
 
       - name: Install git-cliff
         shell: bash
@@ -26,12 +36,60 @@ jobs:
           sudo install /tmp/git-cliff-*/git-cliff /usr/local/bin/git-cliff
           git-cliff --version
 
-      - name: Generate release notes
+      - name: Generate CHANGELOG.md (Keep a Changelog)
         shell: bash
         run: |
           set -e
-          git-cliff --config cliff.toml --output RELEASE_NOTES.md
+          git-cliff --config cliff.toml --output CHANGELOG.md
+          test -s CHANGELOG.md
+
+      - name: Commit and push CHANGELOG.md if changed (CHANGELOG_PAT)
+        shell: bash
+        env:
+          CHANGELOG_PAT: ${{ secrets.CHANGELOG_PAT }}
+        run: |
+          set -e
+
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "No changelog changes."
+          else
+            git config user.name "changelog-bot"
+            git config user.email "changelog-bot@users.noreply.local"
+
+            git add CHANGELOG.md
+            git commit -m "docs(changelog): update changelog [skip ci]"
+
+            origin_url="$(git remote get-url origin)"
+
+            # Convert SSH origin to HTTPS if needed
+            if echo "$origin_url" | grep -q "^git@"; then
+              host="$(echo "$origin_url" | sed -E 's#git@([^:]+):.*#\1#')"
+              path="$(echo "$origin_url" | sed -E 's#git@[^:]+:(.*)#\1#')"
+              origin_url="https://$host/$path"
+            fi
+
+            authed_url="$(echo "$origin_url" | sed -E "s#^https://#https://oauth2:${CHANGELOG_PAT}@#")"
+            git push "$authed_url" HEAD:main
+          fi
+
+      - name: Extract newest changelog section for release body
+        shell: bash
+        run: |
+          set -e
+          # Extract the first "## ..." section (newest section) from CHANGELOG.md
+          # Includes the "## ..." heading and everything until the next "## ..." heading.
+          awk '
+            /^## / { if (seen) exit; seen=1 }
+            seen { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+
+          # Clean trailing whitespace/newlines a bit
+          sed -i 's/[[:space:]]*$//' RELEASE_NOTES.md
+
           test -s RELEASE_NOTES.md
+          echo "---- RELEASE_NOTES.md ----"
+          head -n 60 RELEASE_NOTES.md
+          echo "--------------------------"
 
       - name: Create export zip (Computing:Box Website.zip)
         shell: bash
@@ -43,27 +101,51 @@ jobs:
             exit 1
           fi
 
-          # Create the zip with the exact requested display name
           rm -f "Computing:Box Website.zip"
           (cd export && zip -r "../Computing:Box Website.zip" .)
           test -s "Computing:Box Website.zip"
           ls -lh "Computing:Box Website.zip"
 
-      - name: Prepare tag
+      - name: Prepare YY.MM.DD letter-suffix tag + release name
         shell: bash
         run: |
           set -e
-          SHORT_SHA="$(git rev-parse --short HEAD)"
-          RUN_NO="${GITHUB_RUN_NUMBER:-0}"
-          TAG="main-${RUN_NO}-${SHORT_SHA}"
+
+          # Version: YY.MM.DD (UTC). Swap to `date +...` if you prefer UK-local runner time.
+          VERSION="$(date -u +'%y.%m.%d')"
+          PREFIX="v${VERSION}."
+
+          last_letter="$(
+            git tag --list "${PREFIX}[a-z]" \
+              | sed -E "s/^${PREFIX}([a-z])$/\1/" \
+              | sort \
+              | tail -n 1
+          )"
+
+          if [ -z "$last_letter" ]; then
+            next_letter="a"
+          else
+            if [ "$last_letter" = "z" ]; then
+              echo "❌ Already have v${VERSION}.z today. Refusing to create more than 26 releases/day."
+              exit 1
+            fi
+            next_letter="$(printf "%b" "$(printf '\\%03o' "$(( $(printf '%d' "'$last_letter") + 1 ))")")"
+          fi
+
+          TAG="${PREFIX}${next_letter}"
+          RELEASE_NAME="Computing:Box v${VERSION}.${next_letter}"
 
           echo "TAG=$TAG" >> "$GITHUB_ENV"
+          echo "RELEASE_NAME=$RELEASE_NAME" >> "$GITHUB_ENV"
           echo "ZIP_PATH=Computing:Box Website.zip" >> "$GITHUB_ENV"
 
-      - name: Create and push tag (Gitea PAT)
+          echo "Using tag: $TAG"
+          echo "Release name: $RELEASE_NAME"
+
+      - name: Create and push tag (CHANGELOG_PAT)
         shell: bash
         env:
-          RELEASE_PAT: ${{ secrets.CHANGELOG_PAT}}
+          CHANGELOG_PAT: ${{ secrets.CHANGELOG_PAT }}
         run: |
           set -e
 
@@ -78,13 +160,13 @@ jobs:
             origin_url="https://$host/$path"
           fi
 
-          authed_url="$(echo "$origin_url" | sed -E "s#^https://#https://oauth2:${RELEASE_PAT}@#")"
+          authed_url="$(echo "$origin_url" | sed -E "s#^https://#https://oauth2:${CHANGELOG_PAT}@#")"
           git push "$authed_url" "refs/tags/$TAG" --force
 
-      - name: Create release + upload asset
+      - name: Create Gitea release + upload asset (CHANGELOG_PAT)
         shell: bash
         env:
-          RELEASE_PAT: ${{ secrets.CHANGELOG_PAT}}
+          CHANGELOG_PAT: ${{ secrets.CHANGELOG_PAT }}
         run: |
           set -e
 
@@ -104,18 +186,19 @@ jobs:
 
           api="$base/api/v1"
 
-          # Build release JSON payload to a file
           python3 - <<'PY'
           import json, os
           tag = os.environ["TAG"]
+          name = os.environ["RELEASE_NAME"]
+
           with open("RELEASE_NOTES.md", "r", encoding="utf-8") as f:
               body = f.read()
 
           payload = {
               "tag_name": tag,
               "target_commitish": "main",
-              "name": tag,
-              "body": body,
+              "name": name,
+              "body": body,   # newest section only
               "draft": False,
               "prerelease": False,
           }
@@ -124,15 +207,13 @@ jobs:
               json.dump(payload, f)
           PY
 
-          # Create the release
           curl -sS -X POST \
-            -H "Authorization: token ${RELEASE_PAT}" \
+            -H "Authorization: Bearer ${CHANGELOG_PAT}" \
             -H "Content-Type: application/json" \
             "${api}/repos/${owner}/${repo}/releases" \
             --data-binary @release.json \
             -o release_response.json
 
-          # Extract release id
           release_id="$(python3 - <<'PY'
           import json
           with open("release_response.json","r",encoding="utf-8") as f:
@@ -145,11 +226,10 @@ jobs:
           )"
           echo "Created release id: $release_id"
 
-          # Upload asset (display name exactly "Computing:Box Website.zip")
           curl -sS -X POST \
-            -H "Authorization: token ${RELEASE_PAT}" \
+            -H "Authorization: Bearer ${CHANGELOG_PAT}" \
             "${api}/repos/${owner}/${repo}/releases/${release_id}/assets?name=Computing%3ABox%20Website.zip" \
             -F "attachment=@${ZIP_PATH}" \
             >/dev/null
 
-          echo "✅ Release created: ${TAG} (asset uploaded)"
+          echo "✅ Release created: ${RELEASE_NAME} (tag: ${TAG}) with asset uploaded"
