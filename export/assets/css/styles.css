@@ -57,7 +57,7 @@ html {
 }
 
 .reset {
-  background-image: url("../../assets/img/BitBoxLogo.png?h=a50b3ddb5614299b0c00dd4f01bc402e");
+  background-image: url("/assets/img/BitBoxLogo.png?h=a50b3ddb5614299b0c00dd4f01bc402e");
   height: 100px;
   width: 100px;
 }
@@ -424,5 +424,136 @@ a {
   margin: 0.5em auto 0.5em auto;
   display: flex;
   height: 38px;
+}
+
+.cc-nc:before {
+  background-image: url(https://creativecommons.org/wp-content/themes/vocabulary-theme/vocabulary/svg/cc/icons/cc-icons.svg#cc-nc);
+  float: left;
+  margin-left: -2.5em;
+  filter: invert(100%);
+}
+
+.cc-by:before {
+  background-image: url(https://creativecommons.org/wp-content/themes/vocabulary-theme/vocabulary/svg/cc/icons/cc-icons.svg#cc-by);
+  float: left;
+  margin-left: -2.5em;
+  filter: invert(100%);
+}
+
+li {
+  display: list-item;
+  unicode-bidi: isolate;
+}
+
+.cc-terms ul > li:before {
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: "";
+  height: 2em;
+  width: 2em;
+}
+
+.cc-terms ul > li {
+  padding-left: 2.5em;
+  clear: both;
+  list-style: none;
+  margin-bottom: 2em;
+  min-height: 2em;
+}
+
+.cc-terms ul {
+  padding: 0;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  margin: 0 0 2em 2em;
+}
+
+ul {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  padding-inline-start: 40px;
+  unicode-bidi: isolate;
+}
+
+.cc-sa:before {
+  background-image: url(https://creativecommons.org/wp-content/themes/vocabulary-theme/vocabulary/svg/cc/icons/cc-icons.svg#cc-sa);
+  float: left;
+  margin-left: -2.5em;
+  filter: invert(100%);
+}
+
+.cc-terms a:hover {
+  color: var(--bs-warning);
+}
+
+.cc-terms a {
+  text-decoration: underline;
+  color: var(--bs-success);
+}
+
+.cc-terms p {
+  margin-bottom: 2em;
+  font-size: 1.5em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.cc-terms h1 {
+  box-sizing: border-box;
+  text-transform: none;
+  margin: 0.2em 0;
+  order: 2;
+  width: 100%;
+  margin-top: .39em;
+  margin-bottom: 0;
+  grid: 0 / auto;
+  font-size: 3.56em;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.cc-heading h1 {
+  box-sizing: border-box;
+  text-transform: none;
+  margin: 0.2em 0;
+  order: 2;
+  width: 100%;
+  margin-top: .39em;
+  margin-bottom: 0;
+  grid: 0 / auto;
+  font-size: 3.56em;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.cc-terms h2 {
+  width: 100%;
+  box-sizing: border-box;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2.1em;
+  text-transform: none;
+}
+
+.cc-heading h2 {
+  width: 100%;
+  box-sizing: border-box;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2.1em;
+  text-transform: none;
+}
+
+.alert p {
+  margin-bottom: 0px;
+}
+
+.cc-heading p {
+  margin-top: 16px;
+  margin-bottom: 0px;
 }
 

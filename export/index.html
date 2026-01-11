@@ -37,24 +37,110 @@
             "name": "Computing:Box",
             "url": "https://www.computingbox.co.uk"
         }
-    </script><script>!function(){const e=()=>localStorage.getItem("theme"),t=document.documentElement.getAttribute("data-bss-forced-theme"),a=()=>{if(t)return t;const a=e();if(a)return a;const r=document.documentElement.getAttribute("data-bs-theme");return r||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")},r=e=>{"auto"===e&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.setAttribute("data-bs-theme","dark"):document.documentElement.setAttribute("data-bs-theme",e)};r(a());const c=(e,t=!1)=>{const a=[].slice.call(document.querySelectorAll(".theme-switcher"));if(a.length){document.querySelectorAll("[data-bs-theme-value]").forEach((e=>{e.classList.remove("active"),e.setAttribute("aria-pressed","false")}));for(const t of a){const a=t.querySelector('[data-bs-theme-value="'+e+'"]');a&&(a.classList.add("active"),a.setAttribute("aria-pressed","true"))}}};window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",(()=>{const t=e();"light"!==t&&"dark"!==t&&r(a())})),window.addEventListener("DOMContentLoaded",(()=>{c(a()),document.querySelectorAll("[data-bs-theme-value]").forEach((e=>{e.addEventListener("click",(t=>{t.preventDefault();const a=e.getAttribute("data-bs-theme-value");(e=>{localStorage.setItem("theme",e)})(a),r(a),c(a)}))}))}))}();</script>
-    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
-    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
-    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
-    <link rel="icon" type="image/webp" sizes="1024x1024" href="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=bec7173809e9299f24e368ea574911e3">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
-    <link rel="stylesheet" href="assets/css/styles.min.css?h=4e946c5fe2bb3e785288eb4a3f76fb40">
+    </script>
+    <script>
+        (function() {
+
+            // JavaScript snippet handling Dark/Light mode switching
+
+            const getStoredTheme = () => localStorage.getItem('theme');
+            const setStoredTheme = theme => localStorage.setItem('theme', theme);
+            const forcedTheme = document.documentElement.getAttribute('data-bss-forced-theme');
+
+            const getPreferredTheme = () => {
+
+                if (forcedTheme) return forcedTheme;
+
+                const storedTheme = getStoredTheme();
+                if (storedTheme) {
+                    return storedTheme;
+                }
+
+                const pageTheme = document.documentElement.getAttribute('data-bs-theme');
+
+                if (pageTheme) {
+                    return pageTheme;
+                }
+
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            const setTheme = theme => {
+                if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', theme);
+                }
+            }
+
+            setTheme(getPreferredTheme());
+
+            const showActiveTheme = (theme, focus = false) => {
+                const themeSwitchers = [].slice.call(document.querySelectorAll('.theme-switcher'));
+
+                if (!themeSwitchers.length) return;
+
+                document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+                    element.classList.remove('active');
+                    element.setAttribute('aria-pressed', 'false');
+                });
+
+                for (const themeSwitcher of themeSwitchers) {
+
+                    const btnToActivate = themeSwitcher.querySelector('[data-bs-theme-value="' + theme + '"]');
+
+                    if (btnToActivate) {
+                        btnToActivate.classList.add('active');
+                        btnToActivate.setAttribute('aria-pressed', 'true');
+                    }
+                }
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                const storedTheme = getStoredTheme();
+                if (storedTheme !== 'light' && storedTheme !== 'dark') {
+                    setTheme(getPreferredTheme());
+                }
+            });
+
+            window.addEventListener('DOMContentLoaded', () => {
+                showActiveTheme(getPreferredTheme());
+
+                document.querySelectorAll('[data-bs-theme-value]')
+                    .forEach(toggle => {
+                        toggle.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const theme = toggle.getAttribute('data-bs-theme-value');
+                            setStoredTheme(theme);
+                            setTheme(theme);
+                            showActiveTheme(theme);
+                        })
+                    })
+            });
+        })();
+    </script>
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
+    <link rel="icon" type="image/webp" sizes="1024x1024" href="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css?h=bec7173809e9299f24e368ea574911e3">
+    <link rel="stylesheet" href="/assets/css/DSEG7%20Classic%20Regular.css">
+    <link rel="stylesheet" href="/assets/css/IEC%20symbols%20Unicode.css?h=f58bcc159dfcde3a8902f3c3e5961248">
+    <link rel="stylesheet" href="/assets/css/Inter.css?h=60f7751edc3ab55acc7880f1e25e45d3">
+    <link rel="stylesheet" href="/assets/css/Open%20Sans.css?h=ce1e3121e620675940c895d202b884b3">
+    <link rel="stylesheet" href="/assets/css/Seven%20Segment.css?h=f58bcc159dfcde3a8902f3c3e5961248">
+    <link rel="stylesheet" href="/assets/css/bss-overrides.css?h=3dbfe72d968bc29929e6342eb303e930">
+    <link rel="stylesheet" href="/assets/css/Slider-Range.css?h=f8e9df474f99934e8bddde82bea5ff22">
+    <link rel="stylesheet" href="/assets/css/styles.css?h=88201532374cf4b4d8d775d23183d357">
 </head>
 
 <body>
     <header class="bg-dark">
         <!-- Start: Site Navigation -->
         <nav class="navbar navbar-expand-md sticky-top py-3 navbar-dark" id="mainNav" style="background: rgb(45, 44, 56);">
-            <div class="container"><img src="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" style="width: 32px;margin: 5px;"><a class="navbar-brand d-flex align-items-center" href="/"><span>Computing:Box</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="container"><img src="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" style="width: 32px;margin: 5px;"><a class="navbar-brand d-flex align-items-center" href="/"><span>Computing:Box</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navcol-5">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
@@ -102,7 +188,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 mb-4">
-                    <div class="p-5 mx-lg-5"><img class="rounded img-fluid shadow w-100 fit-cover" style="min-height: 300px;" src="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1"></div>
+                    <div class="p-5 mx-lg-5"><img class="rounded img-fluid shadow w-100 fit-cover" style="min-height: 300px;" src="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1"></div>
                 </div>
                 <div class="col"></div>
             </div>
@@ -113,12 +199,12 @@
             <div class="row justify-content-center">
                 <!-- Start: About Project -->
                 <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column">
-                    <div class="fw-bold d-flex align-items-center mb-2"><img src="assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" style="width: 32px;margin: 5px;" width="32" height="32"><span>Computing:Box</span></div>
+                    <div class="fw-bold d-flex align-items-center mb-2"><img src="/assets/img/ComputingBox-Logo.webp?h=6ac4a5bf6a143a74e3e10fd9455bcce1" style="width: 32px;margin: 5px;" width="32" height="32"><span>Computing:Box</span></div>
                     <p class="text-muted">Computing Concept Simulators</p>
                 </div><!-- End: About Project -->
             </div>
             <hr>
-            <div class="col text-center d-block"><a href="https://www.computingbox.co.uk">Computing:Box</a> © 2024 by <a href="https://git.adcmnetworks.co.uk/alexander.lyall">Alexander Lyall</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a><br><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><br><a href="copyright">Copyright Notice</a></div>
+            <div class="col text-center d-block"><a href="https://www.computingbox.co.uk">Computing:Box</a> © 2024 by <a href="https://git.adcmnetworks.co.uk/alexander.lyall">Alexander Lyall</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a><br><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1.5em;max-height:1.5em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1.5em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style="max-width: 1.5em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1.5em;max-height:1em;margin-left: .2em;"><br><a href="copyright">Copyright Notice</a></div>
             <div class="text-muted d-flex justify-content-center"></div>
             <p class="mb-0"><noscript><!-- Matomo Image Tracker-->
 <img referrerpolicy="no-referrer-when-downgrade" src="https://analytics.adcmnetworks.co.uk/matomo.php?idsite=2&amp;rec=1" style="border:0" alt="" />
@@ -127,7 +213,11 @@
     </footer><!-- End: Footer Multi Column -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/script.min.js?h=3a1fe4e78a66f06efa0573c20b0444ab"></script>
+    <script src="/assets/js/binary.js?h=122236ea60351806f6898510a67d196b"></script>
+    <script src="/assets/js/boldAndDark.js?h=78569998362133b84a76614652f3624f"></script>
+    <script src="/assets/js/hexadecimal.js?h=1d88c5f7da86e237fdac8a16a6958a73"></script>
+    <script src="/assets/js/hexColours.js?h=c64f15434dac1c095562a6a5fe8b155b"></script>
+    <script src="/assets/js/logicGates.js?h=cb132aa615fb58918ab65db03c7face7"></script>
 </body>
 
 </html>

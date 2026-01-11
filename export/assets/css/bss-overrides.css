@@ -71,10 +71,6 @@
   padding-bottom: 3rem !important;
 }
 
-.pt-3 {
-  padding-top: 1rem !important;
-}
-
 @media (min-width: 768px) {
   .px-md-5 {
     padding-left: 3rem !important;
