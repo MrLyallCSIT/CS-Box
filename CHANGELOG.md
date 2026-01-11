@@ -9,8 +9,14 @@ and this project adheres to [Conventional Commits](https://www.conventionalcommi
 
 
 
+## [v25.12.26.a] - 2025-12-26
+
+
+
 ### Documentation
 
+
+- update changelog [skip ci]
 
 - update changelog [skip ci]
 
